@@ -1,4 +1,4 @@
-# BSM
+# BGM
 # Geometric Brownian Motion Simulation
 
 This Python program demonstrates Geometric Brownian Motion (GBM), a model often used to simulate stock prices in financial mathematics.

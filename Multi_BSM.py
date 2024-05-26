@@ -2,7 +2,7 @@ from aleatory.processes import BrownianMotion
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.stats import norm
-# plt.style.use("https://raw.githubusercontent.com/quantgirluk/matplotlib-stylesheets/main/quant-pastel-light.mplstyle")
+plt.style.use("seaborn-v0_8-paper")
 
 
 ## This is done by aleatory library
@@ -48,3 +48,36 @@ def Simulation():
     plt.plot(times, W, "-",lw=1.5)
     plt.show()
     
+def simulation_and_visualize_paths():
+    process = BrownianMotion()
+    process.plot(n=100,N=100)
+    plt.show()
+
+def long_time_behaviour():
+    process = BrownianMotion(T=1000)
+    paths= process.simulate(n=5000, N=50)
+    t = process.times
+    for w in paths:
+        plt.plot(t[1:],w[1:]/t[1:])
+    plt.axhline(y=0, lw=1.0, color= 'black')
+    plt.title("Long Time Behaviour $\\frac{W_t}{t}$")
+    plt.xlabel("$t$")
+    plt.ylabel("$\\frac{W_t}{t}$")
+    plt.show()
+
+def reflection_principle():
+    process = BrownianMotion(T=10, rng=np.random.default_rng(seed=123))
+    bms = process.sample(n=700)
+    ts = process.times
+    a = 1.0
+    fht = np.where(np.isclose(bms, a, rtol=0.01))[0][0]
+    plt.figure()
+    plt.plot(ts, bms, '-', lw=1, label="$W_t$")
+    plt.plot(ts[fht:], -bms[fht:] + 2*a, '-', lw=1, color='orange', label="$W_t^{*}$")
+    plt.axhline(y=a, lw=1, color='crimson', label='a')
+    plt.title(
+        'Brownian Motion Reflection Principle\n $P(\sup_{0\leq s  \leq t} W_s \geq a ) = 2P(W_t\geq a)$ \n')
+    plt.legend()
+    plt.show()
+    
+reflection_principle()
